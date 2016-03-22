@@ -21,7 +21,7 @@
 		$("head").prepend("<link rel='stylesheet' type='text/css' href='"+settings.defaultPath+"/playerSkins/mediaelementplayer.css' />");
 		$("head").append("<link rel='stylesheet' type='text/css' href='"+settings.defaultPath+"/playerSkins/mejs-skins.css' />");
 		if(settings.playlistId.length != 0)
-		{
+		{	// TODO (verificar a funcionalidade da variavel playListURL)
 			//var playListURL = 'http://gdata.youtube.com/feeds/api/playlists/'+settings.playlistId+'?v=2&alt=json&callback=?';
 			var videoURL= 'http://www.youtube.com/watch?v=';
 			var embedUrlStrap = 'http://www.youtube.com/embed/';
@@ -143,8 +143,7 @@
 					var videoID = item.snippet.resourceId.videoId;;
 					var url = videoURL + videoID;
 					var embedUrl = embedUrlStrap + videoID;
-					console.log(item);
-					// console.log('url >> ' + url);
+
 					if (settings.playerSkin == 'youtube') {
 						$('#youtubeElements_playlistFloats ol').append('<li><a href="#"><span class="youtubeElements_videoThumb"><img width="106" data-thumb="//i4.ytimg.com/vi/'+ videoID +'/default.jpg" data-thumb-manual="true" alt="Php :- Import CSV data to mysql database" src="//i4.ytimg.com/vi/wfahu3ggy8c/default.jpg"></span><span class="youtubeElements_videoCount">'+ x + '</span><span class="youtubeElements_currentItem">Now Playing</span><span class="youtubeElements_videoDescription">'+ feedTitle +'</span></a><input type="hidden" value="'+ embedUrl + '" id="videoSrcReference"></li>');
 					}

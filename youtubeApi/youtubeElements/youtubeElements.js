@@ -2,6 +2,7 @@
 	$.fn.youtubeElements = function(options){
 		var
 		defaults = {
+			key: "",
 			playlistId: "",
 			playerWidth: "640",
 			playerHeight: "360",
@@ -21,31 +22,31 @@
 		$("head").append("<link rel='stylesheet' type='text/css' href='"+settings.defaultPath+"/playerSkins/mejs-skins.css' />");
 		if(settings.playlistId.length != 0)
 		{
-			var playListURL = 'http://gdata.youtube.com/feeds/api/playlists/'+settings.playlistId+'?v=2&alt=json&callback=?';
+			//var playListURL = 'http://gdata.youtube.com/feeds/api/playlists/'+settings.playlistId+'?v=2&alt=json&callback=?';
 			var videoURL= 'http://www.youtube.com/watch?v=';
 			var embedUrlStrap = 'http://www.youtube.com/embed/';
-			var templateShare = '<div id="thetutlage_slide_share_options"><div id="thetutlage_slide_share_header">' + 
+			var templateShare = '<div id="thetutlage_slide_share_options"><div id="thetutlage_slide_share_header">' +
 						'<div id="thetutlage_slide_share_title">Share' +
-						'</div><!-- end thetutlage_slide_share_title -->' + 
-						'<div id="thetutlage_slide_share_content">' + 
-							'<div id="thetutlage_slide_share_facebook" class="thetutlage_slide_share_item">' + 
-								'<a href="http://www.facebook.com/sharer.php?u=' + $(location).attr('href') + '" target="_blank"><span>Share on facebook </span></a>' + 
-							'</div><!-- end thetutlage_slide_share_item -->' + 
-							'<div id="thetutlage_slide_share_twitter" class="thetutlage_slide_share_item">' + 
-								'<a href="http://twitter.com/share?text=' + document.title +'&url='+ $(location).attr('href') +'" target="_blank"><span> Share on twitter </span></a>' + 
-							'</div><!-- end thetutlage_slide_share_item -->' + 
+						'</div><!-- end thetutlage_slide_share_title -->' +
+						'<div id="thetutlage_slide_share_content">' +
+							'<div id="thetutlage_slide_share_facebook" class="thetutlage_slide_share_item">' +
+								'<a href="http://www.facebook.com/sharer.php?u=' + $(location).attr('href') + '" target="_blank"><span>Share on facebook </span></a>' +
+							'</div><!-- end thetutlage_slide_share_item -->' +
+							'<div id="thetutlage_slide_share_twitter" class="thetutlage_slide_share_item">' +
+								'<a href="http://twitter.com/share?text=' + document.title +'&url='+ $(location).attr('href') +'" target="_blank"><span> Share on twitter </span></a>' +
+							'</div><!-- end thetutlage_slide_share_item -->' +
 							'<div id="thetutlage_slide_share_google" class="thetutlage_slide_share_item">' +
-								'<a href="https://plus.google.com/share?url=' + $(location).attr('href') +'" target="_blank"><span> Share on Google+ </span></a>' + 
-							'</div><!-- end thetutlage_slide_share_item -->' + 
-							'<div id="thetutlage_slide_share_linkedin" class="thetutlage_slide_share_item">' + 
-								'<a href="http://www.linkedin.com/shareArticle?mini=true&url=' + $(location).attr('href') + '&title=' + document.title +'&source=' + $(location).attr('href') +'" target="_blank"><span> Share on Linkedin </span></a>' + 
-							'</div><!-- end thetutlage_slide_share_item -->' + 
-							'<div id="thetutlage_slide_share_email" class="thetutlage_slide_share_item">' + 
+								'<a href="https://plus.google.com/share?url=' + $(location).attr('href') +'" target="_blank"><span> Share on Google+ </span></a>' +
+							'</div><!-- end thetutlage_slide_share_item -->' +
+							'<div id="thetutlage_slide_share_linkedin" class="thetutlage_slide_share_item">' +
+								'<a href="http://www.linkedin.com/shareArticle?mini=true&url=' + $(location).attr('href') + '&title=' + document.title +'&source=' + $(location).attr('href') +'" target="_blank"><span> Share on Linkedin </span></a>' +
+							'</div><!-- end thetutlage_slide_share_item -->' +
+							'<div id="thetutlage_slide_share_email" class="thetutlage_slide_share_item">' +
 								'<a href="mailto:?subject=' + document.title +'&body= ' + $(location).attr('href') +'" target="_blank"><span> Share via Email </span></a>' +
 							'</div><!-- end thetutlage_slide_share_item -->' +
 						'</div><!-- end thetutlage_slide_share_content -->' +
 					'</div><!-- end thetutlage_slide_share_header --></div>';
-			var playListTemplate = '<div id="youtubeElements_wrapper" class="light">' + 
+			var playListTemplate = '<div id="youtubeElements_wrapper" class="light">' +
 			'<div id="youtubeElements_innerWrapper">' +
 			'<div id="youtubeElements_playlistBar">' +
 				'<div id="youtubeElements_playlistBarWrapper">' +
@@ -107,29 +108,47 @@
 			'</div><!-- end youtubeElements_playlistScroller -->' +
 		'</div><!-- end inner_wrapper -->' +
 	'</div><!-- end wrapper -->';
-	
-	$('body').append(playListTemplate);
 
+	$('body').append(playListTemplate);
+		// Pega titulo playlist
+		$.get(
+			"https://www.googleapis.com/youtube/v3/playlists", {
+				part: 'snippet',
+				id: settings.playlistId,
+				key: settings.key,
+				}, function (data) {
+					$.each(data.items, function(i, item) {
+						console.log(item);
+						console.log('titulo >> ' + item.snippet.title);
+						settings.playlistTitle = item.snippet.title;
+						});
+					}
+				);
+		// Pega videos da playlist
 		var x = 1;
-		$.ajax({
-			type: "GET",
-			url: playListURL,
-			dataType: 'json',
-			success: function(data){
-				var playlistTitle = data.feed.title.$t;
-				$.each(data.feed.entry, function(i, item) {
-					var feedTitle = item.title.$t;
-					var feedURL = item.link[1].href;
-					var fragments = feedURL.split("/");
-					var videoID = fragments[fragments.length - 2];
+		$.get(
+			"https://www.googleapis.com/youtube/v3/playlistItems", {
+				part: 'snippet',
+				maxResults: 50,
+				key: settings.key,
+				playlistId: settings.playlistId,
+				}, function (data) {
+
+				var playlistTitle = settings.playlistTitle;
+
+				$.each(data.items, function(i, item) {
+					var feedTitle = item.snippet.title;
+					// var feedURL = item.link[1].href;
+					// var fragments = feedURL.split("/");
+					var videoID = item.snippet.resourceId.videoId;;
 					var url = videoURL + videoID;
 					var embedUrl = embedUrlStrap + videoID;
-					if(settings.playerSkin == 'youtube')
-					{
+					console.log(item);
+					// console.log('url >> ' + url);
+					if (settings.playerSkin == 'youtube') {
 						$('#youtubeElements_playlistFloats ol').append('<li><a href="#"><span class="youtubeElements_videoThumb"><img width="106" data-thumb="//i4.ytimg.com/vi/'+ videoID +'/default.jpg" data-thumb-manual="true" alt="Php :- Import CSV data to mysql database" src="//i4.ytimg.com/vi/wfahu3ggy8c/default.jpg"></span><span class="youtubeElements_videoCount">'+ x + '</span><span class="youtubeElements_currentItem">Now Playing</span><span class="youtubeElements_videoDescription">'+ feedTitle +'</span></a><input type="hidden" value="'+ embedUrl + '" id="videoSrcReference"></li>');
 					}
-					else
-					{
+					else {
 						$('#youtubeElements_playlistFloats ol').append('<li><a href="#"><span class="youtubeElements_videoThumb"><img width="106" data-thumb="//i4.ytimg.com/vi/'+ videoID +'/default.jpg" data-thumb-manual="true" alt="Php :- Import CSV data to mysql database" src="//i4.ytimg.com/vi/wfahu3ggy8c/default.jpg"></span><span class="youtubeElements_videoCount">'+ x + '</span><span class="youtubeElements_currentItem">Now Playing</span><span class="youtubeElements_videoDescription">'+ feedTitle +'</span></a><input type="hidden" value="'+ url + '" id="videoSrcReference"></li>');
 					}
 					x++;
@@ -162,7 +181,7 @@
 				{
 					$('.youtubeElements_videoCurrentCount').html(0);
 				}
-			}
+
 		});
 	}
 	else
@@ -236,7 +255,7 @@
 		}
 		return false;
 	});
-	
+
 	$('#youtubeElements_nextTrack').live("click",function(){
 		if(parseInt($('.youtubeElements_videoCurrentCount').html()) < parseInt($('.youtubeElements_videoTotalCount').html()))
 		{

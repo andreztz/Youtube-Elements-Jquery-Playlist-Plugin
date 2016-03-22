@@ -137,6 +137,7 @@
 				var playlistTitle = settings.playlistTitle;
 
 				$.each(data.items, function(i, item) {
+					console.log(item);
 					var feedTitle = item.snippet.title;
 					// var feedURL = item.link[1].href;
 					// var fragments = feedURL.split("/");
@@ -156,8 +157,7 @@
 				$('#playlistNameUnqiue').html(playlistTitle);
 				$('.youtubeElements_share').append(templateShare);
 				// autoPlaying First Video
-				if(settings.autoPlay == true)
-				{
+				if (settings.autoPlay == true) {
 					$('.youtubeElements_videoCurrentCount').html(1);
 					var urlAfterAction = $('#youtubeElements_playlistFloats li').first().find('#videoSrcReference').val();
 					$('#youtubeElements_playlistFloats li a').css("opacity","0.4");
@@ -166,25 +166,20 @@
 					$('#youtubeElements_playlistFloats li').first().find('a').css("opacity","1");
 					$('#youtubeElements_playlistFloats li').removeClass('activePlayingMedia');
 					$('#youtubeElements_playlistFloats li').first().addClass('activePlayingMedia');
-					if(settings.playerSkin == 'youtube')
-					{
+					if (settings.playerSkin == 'youtube')	{
 						$(targetVideo).html('<iframe width="'+settings.playerWidth+'" height="'+settings.playerHeight+'" src="'+urlAfterAction+'" frameborder="0" allowfullscreen></iframe>');
 					}
-					else
-					{
+					else {
 						$(targetVideo).html('<video width="'+settings.playerWidth+'" height="'+settings.playerHeight+'" id="youtubeElements_PlayerApiCallback"><source type="video/youtube" src="'+ urlAfterAction + '" /></video>');
 						$('#youtubeElements_PlayerApiCallback').mediaelementplayer();
 					}
 				}
-				else
-				{
+				else {
 					$('.youtubeElements_videoCurrentCount').html(0);
 				}
-
 		});
 	}
-	else
-	{
+	else {
 		alert('Pass in your playlist id');
 	}
 
@@ -193,8 +188,7 @@
 		var lastItemWidth = $('#youtubeElements_playlistFloats').find('li').last().width();
 		var lastItemDifference = parseInt(lastItem) + parseInt(lastItemWidth);
 		var lastElement = $('#youtubeElements_videoNext').offset().left;
-		if(lastItemDifference >= lastElement)
-		{
+		if (lastItemDifference >= lastElement){
 			var parentLeft = $('#youtubeElements_playlistFloats').css("left");
 			var childWidth = $('#youtubeElements_playlistFloats').find('li').width();
 			moveToLeft = parseInt(parentLeft) - parseInt(childWidth);
@@ -205,20 +199,18 @@
 		return false;
 	});
 
-	$('#youtubeElements_videoPrev').live("click",function(){
+	$('#youtubeElements_videoPrev').live("click",function() {
 		var lastItem = $('#youtubeElements_playlistFloats').find('li').first().offset().left;
 		var lastItemWidth = $('#youtubeElements_playlistFloats').find('li').first().width();
 		var lastItemDifference = parseInt(lastItem) - 10;
 		var lastElement = $('#youtubeElements_videoPrev').offset().left;
 		var safeLeft = parseInt(lastItemWidth) + parseInt(lastItemDifference);
-		if(safeLeft >= 28)
-		{
+		if (safeLeft >= 28) {
 			$('#youtubeElements_playlistFloats').animate({
 				left: 0
 			});
 		}
-		else if(lastItemDifference <= lastElement)
-		{
+		else if (lastItemDifference <= lastElement) {
 			var parentLeft = $('#youtubeElements_playlistFloats').css("left");
 			var childWidth = $('#youtubeElements_playlistFloats').find('li').width();
 			moveToLeft = parseInt(parentLeft) + parseInt(childWidth);
@@ -228,6 +220,7 @@
 		}
 		return false;
 	});
+
 	$('#youtubeElements_playlistFloats li').live("click",function(){
 		var urlAfterAction = $(this).find('#videoSrcReference').val();
 		$('#youtubeElements_playlistFloats li a').css("opacity","0.4");
@@ -237,17 +230,14 @@
 		$('#youtubeElements_playlistFloats li').removeClass('activePlayingMedia');
 		$(this).addClass('activePlayingMedia');
 		$('.youtubeElements_videoCurrentCount').html($(this).find('.youtubeElements_videoCount').html());
-		if(settings.playerSkin == 'youtube')
-		{
+		if (settings.playerSkin == 'youtube') {
 			$(targetVideo).html('<iframe width="'+settings.playerWidth+'" height="'+settings.playerHeight+'" src="'+urlAfterAction+'" frameborder="0" allowfullscreen></iframe>');
 		}
-		else
-		{
+		else {
 			$(targetVideo).html('<video width="'+settings.playerWidth+'" height="'+settings.playerHeight+'" id="youtubeElements_PlayerApiCallback"><source type="video/youtube" src="'+ urlAfterAction + '" /></video>');
 			$('#youtubeElements_PlayerApiCallback').mediaelementplayer();
 		}
-		if($(window).scrollTop() > $(targetVideo).offset().top)
-		{
+		if ($(window).scrollTop() > $(targetVideo).offset().top) {
 			var midHeight = settings.playerHeight / 4;
 			var targetTop = parseInt($(targetVideo).offset().top) - parseInt(midHeight);
 			$(window).scrollTop(targetTop);

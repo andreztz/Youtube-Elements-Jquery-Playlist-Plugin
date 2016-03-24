@@ -10,4 +10,4 @@ View an upto to date setup guide on http://www.thetutlage.com/2013/03/youtube-el
 
 ##Demo
 
-http://www.thetutlage.com/demo/YoutubeApi
+http://andreztz.surge.sh/

@@ -6,7 +6,7 @@ different paraments.
 
 ##Setting Up Guide
 
-View an upto to date setup guide on http://www.thetutlage.com/2013/03/youtube-elements-jquery-playlist-plugin/
+TODO
 
 ##Demo
 
